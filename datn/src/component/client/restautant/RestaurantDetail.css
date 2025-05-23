@@ -1,0 +1,32 @@
+.restaurant-detail-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.restaurant-header {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.restaurant-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.restaurant-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}

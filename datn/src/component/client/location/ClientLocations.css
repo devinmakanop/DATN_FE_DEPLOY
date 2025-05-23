@@ -1,0 +1,24 @@
+.location-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.card-image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 180px;
+  background-color: #f0f2f5;
+}
+
+.card-image {
+  max-height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.card-content {
+  padding: 16px;
+}

@@ -1,0 +1,12 @@
+.client-residency-guides-container {
+  padding: 20px;
+}
+
+.guide-card {
+  min-height: 180px;
+  transition: all 0.3s ease;
+}
+
+.guide-card:hover {
+  box-shadow: 0 0 10px rgba(24, 144, 255, 0.3);
+}
