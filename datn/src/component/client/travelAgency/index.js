@@ -59,7 +59,6 @@ function ClientTravelAgency() {
                     {agency.name}
                   </a>
                 }
-                extra={<Rate allowHalf disabled defaultValue={agency.rating} />}
                 onClick={() => goToDetail(agency._id)} // Click anywhere trên Card cũng vào detail
                 style={{ cursor: 'pointer' }}
               >

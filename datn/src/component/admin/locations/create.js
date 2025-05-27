@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, message, Select } from 'antd';
+import { Form, Input, Button, Card, message, Select, Upload } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import axiosToken from '../../context/axiosToken';
 import axios from 'axios';
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { UploadOutlined } from '@ant-design/icons';
 
-// Fix lỗi icon Leaflet
+// Fix icon leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -21,10 +21,40 @@ L.Icon.Default.mergeOptions({
 const AdminLocationCreate = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [position, setPosition] = useState({ lat: 21.0285, lng: 105.8542 }); // Mặc định Hà Nội
+  const [position, setPosition] = useState({ lat: 21.0285, lng: 105.8542 });
+  const [file, setFile] = useState(null);
   const API = process.env.REACT_APP_API_URL_ADMIN || 'http://localhost:5000';
 
-  // Component để điều khiển fly map
+  // Upload ảnh lên Cloudinary
+  const handleUploadImage = async () => {
+    if (!file) return null;
+
+    const data = new FormData();
+    data.append('file', file);
+    data.append('upload_preset', 'DATN_preset');  // thay bằng preset của bạn
+    data.append('folder', 'DATN/admin');          // folder trên cloudinary
+
+    try {
+      const res = await fetch('https://api.cloudinary.com/v1_1/dw0niuzdf/image/upload', { // thay your_cloud_name
+        method: 'POST',
+        body: data,
+      });
+
+      const result = await res.json();
+
+      if (result.secure_url) {
+        return result.secure_url;
+      } else {
+        message.error('Upload ảnh thất bại');
+        return null;
+      }
+    } catch (err) {
+      console.error('Upload failed:', err);
+      message.error('Upload ảnh thất bại');
+      return null;
+    }
+  };
+
   const MapFlyTo = ({ position }) => {
     const map = useMap();
     React.useEffect(() => {
@@ -35,7 +65,6 @@ const AdminLocationCreate = () => {
     return null;
   };
 
-  // Geocode địa chỉ
   const fetchCoordinates = async (address) => {
     try {
       const response = await axios.get('https://nominatim.openstreetmap.org/search', {
@@ -46,7 +75,7 @@ const AdminLocationCreate = () => {
         const { lat, lon } = response.data[0];
         const newPosition = { lat: parseFloat(lat), lng: parseFloat(lon) };
         setPosition(newPosition);
-        form.setFieldsValue(newPosition);
+        form.setFieldsValue({ lat: newPosition.lat, lng: newPosition.lng });
         message.success('Tọa độ đã được cập nhật!');
       } else {
         message.warning('Không tìm thấy địa chỉ');
@@ -57,13 +86,16 @@ const AdminLocationCreate = () => {
     }
   };
 
-  // Submit form
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    const imageUrl = await handleUploadImage();
+
+    if (!imageUrl) return;
+
     const payload = {
       name: values.name,
       type: values.type,
       description: values.description,
-      imageUrl: values.imageUrl,
+      imageUrl: imageUrl,
       address: values.address,
       coordinates: {
         lat: parseFloat(values.lat),
@@ -71,11 +103,11 @@ const AdminLocationCreate = () => {
       },
     };
 
-    axiosToken
-      .post(`${API}/locations`, payload)
+    axios.post(`${API}/locations`, payload)
       .then(() => {
         message.success('Địa điểm đã được tạo thành công!');
         form.resetFields();
+        setFile(null);
         navigate('/admin/locations');
       })
       .catch((error) => {
@@ -84,7 +116,6 @@ const AdminLocationCreate = () => {
       });
   };
 
-  // Bắt sự kiện click trên bản đồ
   const LocationSelector = () => {
     useMapEvents({
       click(event) {
@@ -143,6 +174,22 @@ const AdminLocationCreate = () => {
 
         <Form.Item label="Mô tả" name="description">
           <Input.TextArea rows={3} />
+        </Form.Item>
+
+        <Form.Item
+          label="Tải ảnh"
+          required
+          tooltip="Ảnh này sẽ được hiển thị trong danh sách địa điểm"
+        >
+          <Upload
+            beforeUpload={(file) => {
+              setFile(file);
+              return false; // Ngăn AntD tự upload
+            }}
+            maxCount={1}
+          >
+            <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
+          </Upload>
         </Form.Item>
 
         <Form.Item label="Latitude" hidden name="lat" rules={[{ required: true }]}>

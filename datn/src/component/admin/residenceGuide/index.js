@@ -66,7 +66,7 @@ const ResidenceGuideAdmin = () => {
       key: 'actions',
       render: (_, record) => (
         <Space>
-          <Button type="link" onClick={() => navigate(`/admin/residence-guide/${record._id}`)}>
+          <Button type="link" onClick={() => navigate(`/admin/residenceGuide/detail/${record._id}`)}>
             Xem chi tiết
           </Button>
           <Popconfirm

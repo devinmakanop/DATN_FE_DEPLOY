@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Row, Col, Card, Spin, Select, notification,
-  Button, Typography, Empty
+  Row, Col, Card, Spin, Select, notification, Button, Typography, Empty
 } from 'antd';
+import { Link } from 'react-router-dom';
 import axiosToken from '../../context/axiosToken';
 import './ClientLocations.css';
 
@@ -17,7 +17,6 @@ function ClientLocations() {
 
   const locationTypes = ['văn hóa', 'lịch sử', 'thiên nhiên', 'giải trí'];
 
-  // Lấy toàn bộ địa điểm
   const fetchLocations = async () => {
     setIsLoading(true);
     try {
@@ -33,7 +32,6 @@ function ClientLocations() {
     }
   };
 
-  // Lọc theo loại
   const fetchLocationsByType = async (type) => {
     setIsLoading(true);
     try {
@@ -49,7 +47,6 @@ function ClientLocations() {
     }
   };
 
-  // Sắp xếp theo lượt thích
   const fetchTopLikedLocations = async () => {
     setIsLoading(true);
     try {
@@ -112,42 +109,45 @@ function ClientLocations() {
         <Row gutter={[24, 24]}>
           {locations.map((location) => (
             <Col key={location._id} xs={24} sm={12} md={8} lg={6}>
-              <Card
-                hoverable
-                cover={
-                  <img
-                    alt={location.name}
-                    src={location.imageUrl || location.image}
-                    style={{ height: 200, objectFit: 'cover' }}
-                  />
-                }
-                className="location-card"
-              >
-                <Title level={5} className="text-center">{location.name}</Title>
-                <Text><strong>📌 Loại:</strong> {location.type}</Text><br />
-                <Text><strong>📍 Địa chỉ:</strong> {location.address}</Text>
+              <Link to={`/locations/${location._id}`}>
+                <Card
+                  hoverable
+                  cover={
+                    <img
+                      alt={location.name}
+                      src={location.imageUrl || location.image}
+                      style={{ height: 200, objectFit: 'cover' }}
+                    />
+                  }
+                  className="location-card"
+                >
+                  <Title level={5} className="text-center">{location.name}</Title>
+                  <Text><strong>📌 Loại:</strong> {location.type}</Text><br />
+                  <Text><strong>📍 Địa chỉ:</strong> {location.address}</Text>
 
-                <div className="like-dislike-container mt-2 text-center">
-                  <span className="like-item">👍 {location.likeCount ?? 0}</span>
-                  <span className="dislike-item ml-3">👎 {location.dislikeCount ?? 0}</span>
-                </div>
-
-                {location.coordinates?.lat && location.coordinates?.lng && (
-                  <div className="text-center mt-2">
-                    <Button
-                      type="link"
-                      onClick={() =>
-                        window.open(
-                          `https://www.google.com/maps?q=${location.coordinates.lat},${location.coordinates.lng}`,
-                          '_blank'
-                        )
-                      }
-                    >
-                      🗺️ Xem trên bản đồ
-                    </Button>
+                  <div className="like-dislike-container mt-2 text-center">
+                    <span className="like-item">👍 {location.likeCount ?? 0}</span>
+                    <span className="dislike-item ml-3">👎 {location.dislikeCount ?? 0}</span>
                   </div>
-                )}
-              </Card>
+
+                  {location.coordinates?.lat && location.coordinates?.lng && (
+                    <div className="text-center mt-2">
+                      <Button
+                        type="link"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open(
+                            `https://www.google.com/maps?q=${location.coordinates.lat},${location.coordinates.lng}`,
+                            '_blank'
+                          );
+                        }}
+                      >
+                        🗺️ Xem trên bản đồ
+                      </Button>
+                    </div>
+                  )}
+                </Card>
+              </Link>
             </Col>
           ))}
         </Row>

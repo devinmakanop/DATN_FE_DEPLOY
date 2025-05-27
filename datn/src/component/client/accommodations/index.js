@@ -76,7 +76,6 @@ function AccommodationList() {
                 <Paragraph ellipsis={{ rows: 3 }}>{hotel.description}</Paragraph>
                 <Text strong>Địa chỉ: </Text>{hotel.address}<br />
                 <Text strong>Điện thoại: </Text>{hotel.phone}<br />
-                <Rate allowHalf disabled defaultValue={hotel.rating} />
               </Card>
             </Col>
           ))}

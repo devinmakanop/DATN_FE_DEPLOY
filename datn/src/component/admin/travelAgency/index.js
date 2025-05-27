@@ -50,10 +50,6 @@ const TravelAgencyAdmin = () => {
       dataIndex: 'address',
     },
     {
-      title: 'Đánh giá',
-      dataIndex: 'rating',
-    },
-    {
       title: 'Thao tác',
       key: 'actions',
       render: (_, record) => (

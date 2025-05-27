@@ -71,11 +71,6 @@ const RestaurantAdmin = () => {
       render: text => <Paragraph ellipsis={{ rows: 2 }}>{text}</Paragraph>,
     },
     {
-      title: 'Đánh giá',
-      dataIndex: 'rating',
-      key: 'rating',
-    },
-    {
       title: 'Hành động',
       key: 'actions',
       render: (_, record) => (

@@ -21,6 +21,12 @@ import TravelAgencyDetail from './component/client/travelAgency/TravelAgencyDeta
 import AccommodationList from './component/client/accommodations';
 import AdminAccommodation from './component/admin/accommodations';
 import AccommodationDetail from './component/client/accommodations/detail';
+import AIAnswer from './component/client/AI';
+import AdminLocationDetail from './component/admin/locations/detail';
+import ResidenceGuideDetail from './component/admin/residenceGuide/detail';
+import LocationDetail from './component/client/location/detail';
+import LoginClient from './component/client/Login/Login';
+import RegisterClient from './component/client/register';
 
 function App() {
   return (
@@ -29,9 +35,11 @@ function App() {
         <Route path="admin" element={<Admin />}>
           <Route path="locations" element={<AdminLocations />} />
           <Route path="locations/create" element={<AdminLocationCreate />} />
+          <Route path="locations/detail/:id" element={<AdminLocationDetail />} />
 
           <Route path="residenceGuide" element={<ResidenceGuideAdmin />} />
           <Route path="residenceGuide/create" element={<ResidenceGuideCreate />} />
+          <Route path="residenceGuide/detail/:id" element={<ResidenceGuideDetail />} />
 
           <Route path="restaurant" element={<RestaurantAdmin />} />
           <Route path="restaurant/create" element={<RestaurantCreate />} />
@@ -42,8 +50,14 @@ function App() {
           <Route path="accommodations" element={<AdminAccommodation />} />
 
         </Route>
+
+        <Route path="/login" element={<LoginClient />} />
+        <Route path="/register" element={<RegisterClient />} />
+
         <Route path="/" element={<Client />}>
+          <Route path="/AI" element={<AIAnswer />} />
           <Route path="/locations" element={<ClientLocations />} />
+          <Route path="/locations/:id" element={<LocationDetail />} />
 
           <Route path="/restaurants" element={<ClientRestaurants />} />
           <Route path="/restaurants/:id" element={<RestaurantDetail />} />

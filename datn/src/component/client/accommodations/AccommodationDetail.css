@@ -1,6 +1,4 @@
-/* TravelAgencyDetail.css hoặc dùng lại RestaurantDetail.css */
-
-.travel-agency-detail-container {
+.accommodation-detail-container {
   max-width: 1000px;
   margin: 0 auto;
   padding: 24px;
@@ -8,17 +6,22 @@
 
 .restaurant-header {
   display: flex;
-  flex-direction: row;
-  gap: 24px;
   flex-wrap: wrap;
+  gap: 24px;
 }
 
-.restaurant-image {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
+.accommodation-carousel {
+  width: 400px;
+  max-width: 100%;
   border-radius: 12px;
+  overflow: hidden;
+}
+
+.accommodation-image {
+  width: 100%;
+  height: 300px;
   object-fit: cover;
+  border-radius: 12px;
 }
 
 .restaurant-info {

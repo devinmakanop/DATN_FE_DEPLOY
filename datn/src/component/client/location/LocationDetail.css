@@ -1,27 +1,24 @@
-/* TravelAgencyDetail.css hoặc dùng lại RestaurantDetail.css */
-
-.travel-agency-detail-container {
+.location-detail-container {
   max-width: 1000px;
   margin: 0 auto;
   padding: 24px;
 }
 
-.restaurant-header {
+.location-header {
   display: flex;
   flex-direction: row;
   gap: 24px;
   flex-wrap: wrap;
 }
 
-.restaurant-image {
+.location-image {
   width: 100%;
   max-width: 400px;
-  height: auto;
   border-radius: 12px;
   object-fit: cover;
 }
 
-.restaurant-info {
+.location-info {
   flex: 1;
   min-width: 300px;
 }

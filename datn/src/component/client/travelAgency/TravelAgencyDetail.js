@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Typography, Tag, Rate, Spin, Button, notification } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
-import axiosToken from '../../context/axiosToken'; // hoặc axios thường nếu không có token
+import {
+  Card, Typography, Tag, Spin, Button, notification, Space
+} from 'antd';
+import axiosToken from '../../context/axiosToken'; 
 import './TravelAgencyDetail.css';
 
 const { Title, Paragraph, Text, Link } = Typography;
@@ -13,6 +15,7 @@ function TravelAgencyDetail() {
 
   const [agency, setAgency] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [likeLoading, setLikeLoading] = useState(false);
 
   const fetchAgencyDetail = async () => {
     setLoading(true);
@@ -29,16 +32,27 @@ function TravelAgencyDetail() {
     }
   };
 
+  const handleLikeAction = async (action) => {
+    setLikeLoading(true);
+    try {
+      await axiosToken.post(`${API_BASE_URL}/likes/travelAgency/${id}?action=${action}`);
+      await fetchAgencyDetail(); // Cập nhật lại dữ liệu sau khi like/dislike
+    } catch (err) { 
+      notification.error({
+        message: 'Thao tác không thành công',
+        description: err.message,
+      });
+    } finally {
+      setLikeLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchAgencyDetail();
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="text-center mt-5">
-        <Spin size="large" />
-      </div>
-    );
+    return <Spin className="loading-center" size="large" />;
   }
 
   if (!agency) {
@@ -56,35 +70,71 @@ function TravelAgencyDetail() {
         Quay lại
       </Button>
 
-      <Card title={agency.name} bordered>
-        <Rate allowHalf disabled defaultValue={agency.rating} />
-        <Paragraph style={{ marginTop: 16 }}>{agency.description}</Paragraph>
+      <Card bordered={false}>
+        <div className="restaurant-header">
+          {agency.imageUrl && (
+            <img
+              src={agency.imageUrl}
+              alt={agency.name}
+              className="restaurant-image"
+            />
+          )}
+          <div className="restaurant-info">
+            <Title level={2}>{agency.name}</Title>
 
-        <Paragraph>
-          <Text strong>Địa chỉ:</Text> {agency.address}
-        </Paragraph>
-        <Paragraph>
-          <Text strong>Điện thoại:</Text> {agency.phone}
-        </Paragraph>
-        <Paragraph>
-          <Text strong>Email:</Text>{' '}
-          <a href={`mailto:${agency.email}`}>{agency.email}</a>
-        </Paragraph>
-        <Paragraph>
-          <Text strong>Website:</Text>{' '}
-          <Link href={agency.website} target="_blank" rel="noopener noreferrer">
-            {agency.website}
-          </Link>
-        </Paragraph>
+            <Paragraph><strong>🏢 Địa chỉ:</strong> {agency.address}</Paragraph>
+            <Paragraph><strong>📞 Điện thoại:</strong> {agency.phone}</Paragraph>
+            <Paragraph>
+              <strong>✉️ Email:</strong>{' '}
+              <a href={`mailto:${agency.email}`}>{agency.email}</a>
+            </Paragraph>
+            <Paragraph>
+              <strong>🔗 Website:</strong>{' '}
+              <Link href={agency.website} target="_blank" rel="noopener noreferrer">
+                {agency.website}
+              </Link>
+            </Paragraph>
 
-        <Paragraph>
-          <Text strong>Dịch vụ:</Text>{' '}
-          {agency.services.map((service, idx) => (
-            <Tag key={idx} color="blue">
-              {service}
-            </Tag>
-          ))}
-        </Paragraph>
+            <Paragraph>
+              <strong>🛎️ Dịch vụ:</strong>{' '}
+              {agency.services?.map((service, idx) => (
+                <Tag key={idx} color="blue">{service}</Tag>
+              ))}
+            </Paragraph>
+
+            <Space style={{ marginTop: 12 }}>
+              <Button
+                onClick={() => handleLikeAction('like')}
+                loading={likeLoading}
+              >
+                👍 Like ({agency.likeCount ?? 0})
+              </Button>
+              <Button
+                onClick={() => handleLikeAction('dislike')}
+                loading={likeLoading}
+                danger
+              >
+                👎 Dislike ({agency.dislikeCount ?? 0})
+              </Button>
+            </Space>
+
+            {agency.coordinates?.lat && agency.coordinates?.lng && (
+              <div className="mt-2">
+                <Button
+                  type="link"
+                  onClick={() =>
+                    window.open(
+                      `https://www.google.com/maps?q=${agency.coordinates.lat},${agency.coordinates.lng}`,
+                      '_blank'
+                    )
+                  }
+                >
+                  🗺️ Xem trên bản đồ
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
       </Card>
     </div>
   );

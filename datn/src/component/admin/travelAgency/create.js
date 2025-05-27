@@ -13,7 +13,6 @@ const AddTravelAgency = () => {
       phone: values.phone,
       email: values.email,
       website: values.website,
-      rating: parseFloat(values.rating),
       description: values.description,
       services: values.services.split(',').map(s => s.trim()),
       location: {
@@ -52,9 +51,6 @@ const AddTravelAgency = () => {
         </Form.Item>
         <Form.Item name="website" label="Website">
           <Input />
-        </Form.Item>
-        <Form.Item name="rating" label="Đánh giá" rules={[{ required: true }]}>
-          <Input type="number" step="0.1" min={0} max={5} />
         </Form.Item>
         <Form.Item name="description" label="Mô tả">
           <Input.TextArea />

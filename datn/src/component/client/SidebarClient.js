@@ -13,16 +13,6 @@ export default function SidebarClient({ toggleTheme }) {
 
      const menuItems = [
     {
-      key: '/',
-      label: (
-        <Link to="/">
-          <span className={`textMenu ${location.pathname === '/' ? 'active' : ''}`}>
-            Trang chủ
-          </span>
-        </Link>
-      ),
-    },
-    {
       key: '/locations',
       label: (
         <Link to="/locations">
