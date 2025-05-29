@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col } from 'antd';
 import { Outlet } from 'react-router-dom';
 import SidebarClient from './SidebarClient';
+import ChatWidget from './AI/index'; 
 
 export default function Client() {
     return (
@@ -19,6 +20,7 @@ export default function Client() {
                     <Outlet />
                 </Col>
             </Row>
+            <ChatWidget />
         </>
     );
 }

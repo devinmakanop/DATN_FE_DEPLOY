@@ -32,3 +32,34 @@
   align-items: center;
   height: 300px;
 }
+
+.travel-agency-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.travel-agency-header {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.travel-agency-image {
+  width: 400px;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.travel-agency-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

@@ -35,3 +35,47 @@
   align-items: center;
   height: 300px;
 }
+
+.accommodation-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.accommodation-header {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.accommodation-carousel {
+  width: 400px;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.accommodation-carousel img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.accommodation-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.custom-carousel-dots {
+  bottom: 8px !important;
+}
+

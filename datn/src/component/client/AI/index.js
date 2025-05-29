@@ -1,93 +1,95 @@
 import React, { useState } from 'react';
-import { Card, Input, Button, Typography, notification, List, Avatar } from 'antd';
-import axios from 'axios';
-import { UserOutlined, RobotOutlined } from '@ant-design/icons';
+import { Button, Input } from 'antd';
+import { RobotOutlined , CloseOutlined, SendOutlined } from '@ant-design/icons';
+import './ChatWidget.css';
+import { ReactComponent as BotIcon } from './hubot-svgrepo-com.svg';
 
-const { TextArea } = Input;
-const { Title, Paragraph } = Typography;
-
-function AIAnswer({
-  placeholder = 'Hỏi AI bất kỳ điều gì...',
-  title = '🤖 Hỏi AI'
-}) {
-  const [question, setQuestion] = useState('');
+function ChatWidget() {
+  const [visible, setVisible] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState([]);
 
-  const handleAsk = async () => {
-    if (!question.trim()) return;
+  const toggleChat = () => setVisible(!visible);
 
-    const currentQuestion = question.trim();
+  const handleSend = async () => {
+    if (!input.trim()) return;
+
+    const userMsg = input.trim();
+    setMessages(prev => [...prev, { from: 'user', text: userMsg }]);
+    setInput('');
     setLoading(true);
-    setQuestion('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/chat', {
-        question: currentQuestion,
+      const res = await fetch(`${process.env.REACT_APP_API_URL_CLIENT}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: userMsg })
       });
 
-      console.log(res)
-
-      const aiAnswer = res.data.answer;
-
-      // Cập nhật lịch sử đoạn hội thoại
-      setChatHistory(prev => [
-        ...prev,
-        { type: 'user', content: currentQuestion },
-        { type: 'ai', content: aiAnswer },
-      ]);
-    } catch (err) {
-      notification.error({
-        message: 'Lỗi phản hồi AI',
-        description: err.message,
-      });
+      const data = await res.json();
+      const botReply = data.answer || 'AI không có phản hồi.';
+      setMessages(prev => [...prev, { from: 'bot', text: botReply }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { from: 'bot', text: '❌ Lỗi kết nối với AI.' }]);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSend();
+  };
+
   return (
-    <div style={{ marginTop: 32 }}>
-      <Title level={4}>{title}</Title>
-
-      <TextArea
-        rows={3}
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-        placeholder={placeholder}
-      />
-      <Button
-        type="primary"
-        style={{ marginTop: 10 }}
-        loading={loading}
-        onClick={handleAsk}
-      >
-        Gửi câu hỏi
-      </Button>
-
-      <Card style={{ marginTop: 24, maxHeight: 400, overflowY: 'auto' }}>
-        <List
-          dataSource={chatHistory}
-          renderItem={(item) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={
-                  item.type === 'user' ? (
-                    <Avatar icon={<UserOutlined />} />
-                  ) : (
-                    <Avatar icon={<RobotOutlined />} style={{ backgroundColor: '#1890ff' }} />
-                  )
-                }
-                title={item.type === 'user' ? 'Bạn' : 'AI'}
-                description={<Paragraph style={{ whiteSpace: 'pre-line' }}>{item.content}</Paragraph>}
-              />
-            </List.Item>
-          )}
-          locale={{ emptyText: 'Chưa có câu hỏi nào.' }}
+    <div className="chat-widget-container">
+      {!visible && (
+        <Button
+          type="primary"
+          size="large"
+           icon={<BotIcon style={{ width: 24, height: 24 }} />}
+          className="chat-toggle-button"
+          onClick={toggleChat}
         />
-      </Card>
+      )}
+
+      {visible && (
+        <div className="chat-box">
+          <div className="chat-header">
+            <span>Trợ lý AI</span>
+            <Button type="text" icon={<CloseOutlined />} onClick={toggleChat} />
+          </div>
+
+          <div className="chat-messages">
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`chat-message ${msg.from === 'user' ? 'user' : 'bot'}`}
+              >
+                {msg.text}
+              </div>
+            ))}
+          </div>
+
+          <div className="chat-input">
+            <Input
+              placeholder="Nhập câu hỏi..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={loading}
+            />
+            <Button
+              type="primary"
+              icon={<SendOutlined />}
+              onClick={handleSend}
+              loading={loading}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-export default AIAnswer;
+export default ChatWidget;

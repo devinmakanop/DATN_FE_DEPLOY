@@ -132,15 +132,26 @@ a{
 
 /* Login Button Styles */
 .menu-container .btn-loginClient {
-  position: absolute;
-  right: 200px;
-  top: 10px;
+  position: relative; /* Giữ trong flow layout */
   color: white !important;
-  font-weight: 500;
+  left: 200px;
+  font-weight: 600;
+  font-size: 16px;       /* Chữ nhỏ hơn */
   background-color: orangered;
-  padding: 0 20px;
-  border-radius: 45px;
+  padding: 6px 16px;     /* Gọn hơn, ít padding ngang */
+  border-radius: 25px;   /* Bo tròn nhẹ */
   border: none;
+  cursor: pointer;
+  line-height: 1.2;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(255, 69, 0, 0.5); /* Đổ bóng nhẹ */
+  user-select: none; /* Không cho chọn chữ khi click */
+}
+
+.infor-user{
+  position: relative; /* Giữ trong flow layout */
+  left: 200px;
+
 }
 
 .menu-container .btn-loginClient:hover {

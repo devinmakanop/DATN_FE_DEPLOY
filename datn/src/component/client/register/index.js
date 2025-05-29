@@ -16,63 +16,60 @@ const RegisterClient = () => {
     navigate("/login");
   };
 
-
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Lấy dữ liệu từ form
     const formData = new FormData(e.target);
-
-    // Chuyển FormData thành một đối tượng JavaScript
     const formObject = Object.fromEntries(formData.entries());
-
-    // Tách mật khẩu và xác nhận mật khẩu
     const { password, confirmPassword } = formObject;
 
-    // Kiểm tra mật khẩu và xác nhận mật khẩu có khớp hay không
     if (password !== confirmPassword) {
       setError('Mật khẩu và xác nhận mật khẩu phải trùng nhau');
       setShowErrorAlert(true);
+      setShowSuccessAlert(false);
       setLoading(false);
-      setShowSuccessAlert(false)
       return;
     }
 
     try {
-      const response = await fetch(`${API}/users/register`, {
+      const response = await fetch(`${API}/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formObject), // Gửi dữ liệu form dưới dạng JSON
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formObject),
       });
 
       const res = await response.json();
 
       if (res.code === 200) {
         setShowSuccessAlert(true);
-        setLoading(false);
         setShowErrorAlert(false);
+        setError('');
+        setLoading(false);
+        document.getElementById("form-register").reset();
       } else if (res.code === 400) {
-        setError("Email already exists!");
+        setError("Email đã được sử dụng!");
         setShowSuccessAlert(false);
         setShowErrorAlert(true);
         setLoading(false);
       } else if (res.code === 401) {
-        setError("Username already exists!");
+        setError("Tên đăng nhập đã tồn tại!");
+        setShowSuccessAlert(false);
+        setShowErrorAlert(true);
+        setLoading(false);
+      } else {
+        setError(res.message || "Đã xảy ra lỗi.");
         setShowSuccessAlert(false);
         setShowErrorAlert(true);
         setLoading(false);
       }
-    } catch (error) {
-      console.error('Error:', error);
-      setError('An unexpected error occurred');
+    } catch (err) {
+      setError('Lỗi kết nối đến máy chủ');
       setShowErrorAlert(true);
+      setShowSuccessAlert(false);
       setLoading(false);
     }
   };
-
 
   return (
     <div className="register-box-client">
@@ -143,7 +140,7 @@ const RegisterClient = () => {
         </div>
 
         <button className='btn-registerClient' style={{ marginTop: "35px" }} type="submit" disabled={loading}>
-          Đăng ký
+          {loading ? "Đang xử lý..." : "Đăng ký"}
         </button>
       </form>
       <div className='mt-2 text-center'>
