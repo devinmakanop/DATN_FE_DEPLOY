@@ -25,7 +25,7 @@ const LoginAdmin = () => {
 
     try {
       // Gửi yêu cầu đăng nhập
-      const response = await fetch(`${API_CLIENT}/users/login`, {
+      const response = await fetch(`${API_CLIENT}/auth/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ const LoginAdmin = () => {
         if (token !== undefined && token !== null) {
           // Store the token in a cookie, set to expire in 1 day
           Cookies.set('token', token, { expires: 1 });
-          navigate("/")
+          navigate("/admin")
         } else {
           // Display an error alert if the token is undefined or null
           setShowErrorAlert(true)
@@ -66,7 +66,6 @@ const LoginAdmin = () => {
   };
 
   const handleRegister = () => {
-    navigate("/register")
   }
 
   return (

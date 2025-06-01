@@ -28,28 +28,32 @@ import LocationDetail from './component/client/location/detail';
 import LoginClient from './component/client/Login/Login';
 import RegisterClient from './component/client/register';
 import ClientResidencyGuideDetail from './component/client/residenceGuide/detail';
+import PrivateRoute from './component/admin/middleware/auth.middleware';
+import LoginAdmin from './component/admin/login';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="admin/login" element={<LoginAdmin />} />
         <Route path="admin" element={<Admin />}>
-          <Route path="locations" element={<AdminLocations />} />
-          <Route path="locations/create" element={<AdminLocationCreate />} />
-          <Route path="locations/detail/:id" element={<AdminLocationDetail />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="locations" element={<AdminLocations />} />
+            <Route path="locations/create" element={<AdminLocationCreate />} />
+            <Route path="locations/detail/:id" element={<AdminLocationDetail />} />
 
-          <Route path="residenceGuide" element={<ResidenceGuideAdmin />} />
-          <Route path="residenceGuide/create" element={<ResidenceGuideCreate />} />
-          <Route path="residenceGuide/detail/:id" element={<ResidenceGuideDetail />} />
+            <Route path="residenceGuide" element={<ResidenceGuideAdmin />} />
+            <Route path="residenceGuide/create" element={<ResidenceGuideCreate />} />
+            <Route path="residenceGuide/detail/:id" element={<ResidenceGuideDetail />} />
 
-          <Route path="restaurant" element={<RestaurantAdmin />} />
-          <Route path="restaurant/create" element={<RestaurantCreate />} />
+            <Route path="restaurant" element={<RestaurantAdmin />} />
+            <Route path="restaurant/create" element={<RestaurantCreate />} />
 
-          <Route path="travelAgency" element={<TravelAgencyAdmin />} />
-          <Route path="travelAgency/create" element={<AddTravelAgency />} />
+            <Route path="travelAgency" element={<TravelAgencyAdmin />} />
+            <Route path="travelAgency/create" element={<AddTravelAgency />} />
 
-          <Route path="accommodations" element={<AdminAccommodation />} />
-
+            <Route path="accommodations" element={<AdminAccommodation />} />
+          </Route>
         </Route>
 
         <Route path="/login" element={<LoginClient />} />
