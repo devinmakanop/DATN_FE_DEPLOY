@@ -18,6 +18,7 @@ function AccommodationDetail() {
   const [likeLoading, setLikeLoading] = useState(false);
   const [comment, setComment] = useState('');
   const [commentLoading, setCommentLoading] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
   const fetchHotel = async () => {
     setLoading(true);
@@ -32,6 +33,16 @@ function AccommodationDetail() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const nextSlide = () => {
+    if (!hotel?.images) return;
+    setCarouselIndex((prev) => (prev + 1 >= hotel.images.length ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    if (!hotel?.images) return;
+    setCarouselIndex((prev) => (prev - 1 < 0 ? hotel.images.length - 1 : prev - 1));
   };
 
   const handleLikeAction = async (action) => {
@@ -115,6 +126,10 @@ function AccommodationDetail() {
     return <Paragraph style={{ textAlign: 'center', marginTop: 50 }}>Không tìm thấy khách sạn.</Paragraph>;
   }
 
+  const currentImage = hotel.images && hotel.images.length > 0
+    ? hotel.images[carouselIndex]
+    : null;
+
   return (
     <div className="accommodation-detail-container" style={{ padding: 24 }}>
       <Button type="primary" onClick={() => navigate(-1)} style={{ marginBottom: 16 }}>
@@ -126,31 +141,59 @@ function AccommodationDetail() {
           className="accommodation-top-section"
           style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}
         >
-          {/* Ảnh bên trái */}
-          {hotel.images && hotel.images.length > 0 && (
+          {/* Carousel ảnh 1 ảnh */}
+          {currentImage && (
             <div
               className="accommodation-carousel-wrapper"
-              style={{ flex: '1 1 40%', maxWidth: '40%' }}
+              style={{
+                flex: '1 1 40%',
+                maxWidth: '40%',
+                position: 'relative',
+                borderRadius: 8,
+                overflow: 'hidden',
+                boxShadow: '0 0 8px rgba(0,0,0,0.1)',
+              }}
             >
-              <div
-                className="accommodation-carousel"
-                style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+              <img
+                src={currentImage}
+                alt={`Ảnh ${carouselIndex + 1}`}
+                style={{
+                  width: '100%',
+                  height: 300,
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
+              />
+              <Button
+                size="small"
+                onClick={prevSlide}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: 8,
+                  transform: 'translateY(-50%)',
+                  zIndex: 10,
+                  borderRadius: '50%',
+                  opacity: 0.7,
+                }}
               >
-                {hotel.images.map((img, idx) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt={`Ảnh ${idx + 1}`}
-                    className="accommodation-image"
-                    style={{
-                      width: '100%',
-                      borderRadius: 8,
-                      objectFit: 'cover',
-                      maxHeight: 200,
-                    }}
-                  />
-                ))}
-              </div>
+                ‹
+              </Button>
+              <Button
+                size="small"
+                onClick={nextSlide}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: 8,
+                  transform: 'translateY(-50%)',
+                  zIndex: 10,
+                  borderRadius: '50%',
+                  opacity: 0.7,
+                }}
+              >
+                ›
+              </Button>
             </div>
           )}
 
