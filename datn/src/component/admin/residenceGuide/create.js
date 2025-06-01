@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, message, Card } from 'antd';
+import { Form, Input, Button, message, Card, Space } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +22,7 @@ const ResidenceGuideCreate = () => {
   };
 
   return (
-    <Card title="Thêm hướng dẫn tạm trú" style={{ maxWidth: 600, margin: '0 auto', marginTop: 24 }}>
+    <Card title="Thêm hướng dẫn tạm trú" style={{ maxWidth: 800, margin: '0 auto', marginTop: 24 }}>
       <Form layout="vertical" onFinish={onFinish}>
         <Form.Item
           label="Tiêu đề"
@@ -32,11 +33,11 @@ const ResidenceGuideCreate = () => {
         </Form.Item>
 
         <Form.Item
-          label="Mô tả"
+          label="Mô tả ngắn"
           name="description"
           rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
         >
-          <Input.TextArea rows={4} placeholder="Nhập mô tả ngắn" />
+          <Input.TextArea rows={3} placeholder="Nhập mô tả ngắn" />
         </Form.Item>
 
         <Form.Item
@@ -49,6 +50,55 @@ const ResidenceGuideCreate = () => {
         >
           <Input placeholder="https://..." />
         </Form.Item>
+
+        <Form.List name="steps" rules={[{ required: true, message: 'Vui lòng thêm ít nhất 1 bước' }]}>
+          {(fields, { add, remove }) => (
+            <>
+              <label style={{ fontWeight: 500 }}>Các bước hướng dẫn</label>
+              {fields.map(({ key, name, ...restField }) => (
+                <Card
+                  key={key}
+                  style={{ marginBottom: 16 }}
+                  type="inner"
+                  title={`Bước ${name + 1}`}
+                  extra={
+                    <Button danger type="text" icon={<MinusCircleOutlined />} onClick={() => remove(name)} />
+                  }
+                >
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'title']}
+                    label="Tiêu đề bước"
+                    rules={[{ required: true, message: 'Nhập tiêu đề bước' }]}
+                  >
+                    <Input placeholder="Ví dụ: Bước 1: Chuẩn bị giấy tờ" />
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'content']}
+                    label="Nội dung bước"
+                    rules={[{ required: true, message: 'Nhập nội dung bước' }]}
+                  >
+                    <Input.TextArea rows={3} placeholder="Mô tả chi tiết cho bước này" />
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'image']}
+                    label="Ảnh minh họa (nếu có)"
+                    rules={[{ type: 'url', message: 'Link ảnh không hợp lệ' }]}
+                  >
+                    <Input placeholder="https://..." />
+                  </Form.Item>
+                </Card>
+              ))}
+              <Form.Item>
+                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                  Thêm bước hướng dẫn
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
 
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>

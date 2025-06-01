@@ -11,6 +11,19 @@
   height: 180px;
   background-color: #f0f2f5;
 }
+.btn-orange {
+  background-color: #ff7f50 !important; /* cam san hô đậm */
+  border-color: #ff7f50 !important;
+  color: white !important;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-orange:hover {
+  background-color: #ff6633 !important; /* cam đậm hơn khi hover */
+  border-color: #ff6633 !important;
+}
+
 
 .card-image {
   max-height: 100%;

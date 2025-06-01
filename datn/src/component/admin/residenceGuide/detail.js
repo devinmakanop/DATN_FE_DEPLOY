@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Typography, Card, Spin, message, Button, Space } from 'antd';
+import { Typography, Card, Spin, message, Button, Space, Divider, Image } from 'antd';
 
 const { Title, Paragraph, Link, Text } = Typography;
 
@@ -48,10 +48,12 @@ const ResidenceGuideDetail = () => {
       >
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
           <Title level={3}>{guide.title}</Title>
+
           <Paragraph>
             <Text strong>Mô tả:</Text><br />
             {guide.description || 'Không có mô tả'}
           </Paragraph>
+
           <Paragraph>
             <Text strong>Liên kết:</Text>{' '}
             {guide.link ? (
@@ -62,9 +64,40 @@ const ResidenceGuideDetail = () => {
               <Text type="secondary">Không có liên kết</Text>
             )}
           </Paragraph>
-          <Button type="primary" onClick={() => navigate('/admin/residence-guide')}>
-            ⬅ Quay lại danh sách
-          </Button>
+
+          <Divider />
+
+          <Title level={4}>Các bước hướng dẫn</Title>
+          {guide.steps && guide.steps.length > 0 ? (
+            guide.steps.map((step, index) => (
+              <Card
+                key={index}
+                type="inner"
+                title={`Bước ${index + 1}: ${step.title}`}
+                style={{ borderRadius: 10 }}
+              >
+                <Paragraph>{step.content}</Paragraph>
+                {step.image && (
+                  <Image
+                    src={step.image}
+                    alt={`Bước ${index + 1}`}
+                    style={{ maxHeight: 300, objectFit: 'contain', marginTop: 12 }}
+                    placeholder
+                  />
+                )}
+              </Card>
+            ))
+          ) : (
+            <Paragraph type="secondary">Không có bước hướng dẫn nào.</Paragraph>
+          )}
+
+          <Divider />
+
+          <div style={{ textAlign: 'center' }}>
+            <Button type="primary" onClick={() => navigate('/admin/residence-guide')}>
+              ⬅ Quay lại danh sách
+            </Button>
+          </div>
         </Space>
       </Card>
     </div>

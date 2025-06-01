@@ -134,7 +134,7 @@ a{
 .menu-container .btn-loginClient {
   position: relative; /* Giữ trong flow layout */
   color: white !important;
-  left: 200px;
+  left: 150px;
   font-weight: 600;
   font-size: 16px;       /* Chữ nhỏ hơn */
   background-color: orangered;
@@ -451,3 +451,24 @@ a{
   }
 }
 
+.menuClient {
+  display: flex;
+  align-items: center;
+}
+
+.menuClient .ant-menu-item {
+  /* bỏ khoảng cách mặc định */
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Đẩy item select sang phải */
+.menuClient .menu-item-language {
+  position: relative;
+  left: 100px !important;
+  bottom: 200px;
+  display: flex !important;
+  align-items: center;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}

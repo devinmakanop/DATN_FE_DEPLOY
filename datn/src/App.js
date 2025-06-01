@@ -27,6 +27,7 @@ import ResidenceGuideDetail from './component/admin/residenceGuide/detail';
 import LocationDetail from './component/client/location/detail';
 import LoginClient from './component/client/Login/Login';
 import RegisterClient from './component/client/register';
+import ClientResidencyGuideDetail from './component/client/residenceGuide/detail';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           <Route path="/restaurants/:id" element={<RestaurantDetail />} />
 
           <Route path="/residenceGuides" element={<ClientResidencyGuides />} />
+          <Route path="/residenceGuide/:id" element={<ClientResidencyGuideDetail />} />
           <Route path="/travelAgency" element={<ClientTravelAgency />} />
           <Route path="/travelAgency/:id" element={<TravelAgencyDetail />} />
 
