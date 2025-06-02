@@ -62,7 +62,7 @@ function ClientResidencyGuides() {
 
   return (
     <div className="client-residency-guides-container">
-      <Title level={2} className="mb-4">{labels.title}</Title>
+      <Title level={2} className="mb-4 text-color"  style={{ textAlign: 'center', marginBottom: 30 }}>{labels.title}</Title>
 
       {loading ? (
         <div className="text-center mt-5">

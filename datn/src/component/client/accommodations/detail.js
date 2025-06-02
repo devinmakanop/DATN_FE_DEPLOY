@@ -251,12 +251,6 @@ function AccommodationDetail() {
         </Button>
 
         {/* Select đổi ngôn ngữ */}
-        <Select value={lang} onChange={handleChangeLang} style={{ width: 120 }}>
-          <Option value="vi">Tiếng Việt</Option>
-          <Option value="en">English</Option>
-          <Option value="ko">한국어</Option>
-          <Option value="zh">中文</Option>
-        </Select>
       </Space>
 
       <Card bordered={false}>

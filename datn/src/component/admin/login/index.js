@@ -22,6 +22,7 @@ const LoginAdmin = () => {
       password: password
     };
 
+    console.log(loginData)
 
     try {
       // Gửi yêu cầu đăng nhập
@@ -41,10 +42,11 @@ const LoginAdmin = () => {
         // Lấy token từ phản hồi của API
         const token = data.token; // Giả sử API trả về token trong thuộc tính 'token'
 
+
         // Lưu token vào cookies
         if (token !== undefined && token !== null) {
           // Store the token in a cookie, set to expire in 1 day
-          Cookies.set('token', token, { expires: 1 });
+          localStorage.setItem('token', token, { expires: 1 });
           navigate("/admin")
         } else {
           // Display an error alert if the token is undefined or null
@@ -108,9 +110,6 @@ const LoginAdmin = () => {
           {error && <p style={{ color: 'red' }}>{error}</p>}
           <button className='btn-loginClient' style={{ marginTop: "35px" }} type="submit">Đăng nhập</button>
         </form>
-        <div className='mt-2'>
-          Bạn chưa có tài khoản? <span className='text-register' onClick={handleRegister}> Đăng ký ngay</span>
-        </div>
       </div >
     </>
   );

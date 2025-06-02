@@ -66,7 +66,16 @@ const ResidenceGuideAdmin = () => {
       key: 'actions',
       render: (_, record) => (
         <Space>
-          <Button type="link" onClick={() => navigate(`/admin/residenceGuide/detail/${record._id}`)}>
+          <Button
+            type="primary"
+            style={{
+              background: 'linear-gradient(135deg, #6253e1, #04befe)',
+              border: 'none',
+              color: '#fff',
+              fontWeight: '600',
+            }}
+            onClick={() => navigate(`/admin/residenceGuide/detail/${record._id}`)}
+          >
             Xem chi tiết
           </Button>
           <Popconfirm
@@ -75,7 +84,16 @@ const ResidenceGuideAdmin = () => {
             okText="Xóa"
             cancelText="Hủy"
           >
-            <Button danger type="link">Xoá</Button>
+            <Button
+              danger
+              style={{
+                fontWeight: '600',
+                border: 'none',
+              }}
+              type="primary"
+            >
+              Xóa
+            </Button>
           </Popconfirm>
         </Space>
       ),
@@ -84,12 +102,19 @@ const ResidenceGuideAdmin = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <div>
-        <h2>Hướng dẫn tạm trú cho người nước ngoài</h2>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>Hướng dẫn tạm trú cho người nước ngoài</h2><br></br>
         <Button
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => navigate('/admin/residenceGuide/create')}
+          style={{
+            background: 'linear-gradient(135deg, #6253e1, #04befe)',
+            border: 'none',
+            fontWeight: '600',
+            alignItems: 'center',
+            gap: 6,
+          }}
         >
           Thêm hướng dẫn
         </Button>
@@ -102,6 +127,7 @@ const ResidenceGuideAdmin = () => {
           columns={columns}
           rowKey="_id"
           pagination={{ pageSize: 6 }}
+          bordered
         />
       )}
     </div>

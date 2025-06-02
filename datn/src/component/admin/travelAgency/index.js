@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Modal, message } from 'antd';
+import { Table, Button, Space, Modal, message, Typography } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
+const { Paragraph } = Typography;
 
 const TravelAgencyAdmin = () => {
   const [agencies, setAgencies] = useState([]);
@@ -40,23 +43,62 @@ const TravelAgencyAdmin = () => {
     });
   };
 
+  const buttonStyle = {
+    background: 'linear-gradient(135deg, #6253e1, #04befe)',
+    border: 'none',
+    color: '#fff',
+    fontWeight: 600,
+    padding: '4px 12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+  };
+
+  const dangerButtonStyle = {
+    fontWeight: 600,
+    border: 'none',
+  };
+
   const columns = [
     {
       title: 'Tên công ty',
       dataIndex: 'name',
+      key: 'name',
+      render: text => <strong>{text}</strong>
     },
     {
       title: 'Địa chỉ',
       dataIndex: 'address',
+      key: 'address',
+      render: text => <Paragraph ellipsis={{ rows: 2 }}>{text}</Paragraph>
     },
     {
       title: 'Thao tác',
       key: 'actions',
       render: (_, record) => (
         <Space>
-          <Button type="link" onClick={() => navigate(`/travel-agencies/${record._id}`)}>Xem</Button>
-          <Button type="link" onClick={() => navigate(`/travel-agencies/edit/${record._id}`)}>Sửa</Button>
-          <Button danger type="link" onClick={() => handleDelete(record._id)}>Xóa</Button>
+          <Button
+            icon={<EyeOutlined />}
+            style={buttonStyle}
+            onClick={() => navigate(`/admin/travelAgency/detail/${record._id}`)}
+          >
+            Xem
+          </Button>
+          <Button
+            icon={<EditOutlined />}
+            type="primary" className="btn-warn" 
+            onClick={() => navigate(`/admin/travelAgency/edit/${record._id}`)}
+          >
+            Sửa
+          </Button>
+          <Button
+            icon={<DeleteOutlined />}
+            danger
+            style={dangerButtonStyle}
+            onClick={() => handleDelete(record._id)}
+          >
+            Xóa
+          </Button>
         </Space>
       ),
     },
@@ -64,11 +106,28 @@ const TravelAgencyAdmin = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <h2>Danh sách công ty du lịch</h2>
-      <Button type="primary" onClick={() => navigate('/admin/travelAgency/create')} style={{ marginBottom: 16 }}>
+      <h2>Quản lý công ty du lịch</h2>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        style={{
+          ...buttonStyle,
+          marginBottom: 16,
+          fontWeight: 600,
+          gap: 8,
+        }}
+        onClick={() => navigate('/admin/travelAgency/create')}
+      >
         Thêm công ty
       </Button>
-      <Table rowKey="_id" dataSource={agencies} columns={columns} loading={loading} />
+      <Table
+        rowKey="_id"
+        dataSource={agencies}
+        columns={columns}
+        loading={loading}
+        pagination={{ pageSize: 5 }}
+        bordered
+      />
     </div>
   );
 };

@@ -139,7 +139,15 @@ const ClientResidencyGuideDetail = () => {
                     title={`Bước ${index + 1}: ${step.title}`}
                     style={{ marginBottom: 16, borderRadius: 10 }}
                   >
-                    <Paragraph>{step.content}</Paragraph>
+                    <Paragraph>
+                      {step.content.split('\n').map((line, i) => (
+                        <span key={i}>
+                          {line}
+                          <br />
+                        </span>
+                      ))}
+                    </Paragraph>
+
                     {step.image && (
                       <div style={{ textAlign: 'center', marginTop: 12 }}>
                         <Image

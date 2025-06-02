@@ -166,25 +166,6 @@ export default function SidebarClient() {
         ),
       };
 
-  const languageSelectItem = {
-    key: 'language',
-    label: (
-      <Select
-        value={language}
-        onChange={handleLanguageChange}
-        style={{ width: 120 }}
-        bordered={false}
-        dropdownMatchSelectWidth={false}
-      >
-        <Option value="vi">Tiếng Việt</Option>
-        <Option value="ko">한국어</Option>
-        <Option value="en">English</Option>
-        <Option value="zh-CN">中文</Option>
-      </Select>
-    ),
-    className: 'menu-item-language',
-  };
-
   return (
     <div className='header'>
       <div className='header-top' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -193,13 +174,26 @@ export default function SidebarClient() {
           src='https://res.cloudinary.com/dw0niuzdf/image/upload/v1748773269/DATN/admin/nxq2p3zjp84izlsvyiru.jpg'
           alt="Logo"
         />
+        {/* Select ngôn ngữ */}
+        <div className='language-select-wrapper'>
+          <Select
+            value={language}
+            onChange={handleLanguageChange}
+            style={{ width: 120 , zIndex:  99999999999}}
+          >
+            <Option value="vi">Tiếng Việt</Option>
+            <Option value="ko">한국어</Option>
+            <Option value="en">English</Option>
+            <Option value="zh-CN">中文</Option>
+          </Select>
+        </div>
       </div>
 
       <div className="mt-1 menu-container">
         <Menu
           mode="horizontal"
           className="menuClient"
-          items={[...baseMenuItems, userMenuItem, languageSelectItem]}
+          items={[...baseMenuItems, userMenuItem]}
           selectable={false}
         />
       </div>

@@ -2,35 +2,33 @@ import React from 'react';
 import { Row, Col } from 'antd';
 import { Outlet } from 'react-router-dom';
 import SidebarClient from './SidebarClient';
-import ChatWidget from './AI/index'; 
+import ChatWidget from './AI/index';
 
 export default function Client() {
+  const backgroundStyle = {
+    backgroundImage: 'url(https://yenvan.edu.vn/wp-content/uploads/2023/10/Ha-Noi.jpg)', // Ảnh nền
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    width: '100vw',
+    minHeight: '100vh', // Chiều cao toàn màn hình
+    paddingTop: '140px',
+  };
+
   return (
-    <>
+    <div style={backgroundStyle}>
       <Row>
         <Col>
           <SidebarClient />
         </Col>
       </Row>
-      <Row style={{ position: 'relative', top: '140px' }}>
+      <Row>
         <Col span={2}></Col>
         <Col span={18}>
-          <div
-            style={{
-              background: 'linear-gradient(135deg,rgb(121, 163, 241) 0%,rgb(40, 99, 202) 100%)', // gradient xanh nước biển
-              padding: '24px',
-              borderRadius: '12px',
-              width: "82vw",
-              minHeight: '80vh',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-              color: 'white', // chữ trắng cho tương phản tốt trên nền xanh
-            }}
-          >
-            <Outlet />
-          </div>
+          <Outlet />
         </Col>
       </Row>
       <ChatWidget />
-    </>
+    </div>
   );
 }

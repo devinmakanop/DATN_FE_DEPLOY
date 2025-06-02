@@ -10,8 +10,6 @@ const LoginClient = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const navigate = useNavigate();
 
-  document.title = "Đăng nhập";
-
   const handleLogin = async (e) => {
     e.preventDefault();
 

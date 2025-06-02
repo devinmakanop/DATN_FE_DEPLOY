@@ -112,7 +112,7 @@ function ClientRestaurants() {
 
   return (
     <div className="client-restaurants-container">
-      <Title level={2} className="mb-4">{labels.title}</Title>
+      <Title level={2} className="mb-4 text-color"  style={{ textAlign: 'center', marginBottom: 30 }}>{labels.title}</Title>
 
       <div className="filter-bar mb-4">
         <Select

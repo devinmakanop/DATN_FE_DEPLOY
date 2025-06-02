@@ -1,47 +1,112 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Modal, message, Typography, Image } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import { Button, Row, Table, Modal, Col, notification, Typography, Image } from 'antd';
+import '@ant-design/v5-patch-for-react-19';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const { Paragraph } = Typography;
+const { confirm } = Modal;
 
-const RestaurantAdmin = () => {
-  const [restaurants, setRestaurants] = useState([]);
-  const [loading, setLoading] = useState(true);
+function AdminRestaurants() {
+  const API_BASE_URL = 'http://localhost:5000/api';
+  const [restaurantList, setRestaurantList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+
   const navigate = useNavigate();
 
-  const fetchRestaurants = async () => {
+  const fetchRestaurantList = async () => {
+    setIsLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/restaurants');
-      setRestaurants(res.data);
+      const response = await axios.get(`${API_BASE_URL}/restaurants`);
+      if (Array.isArray(response.data)) {
+        setRestaurantList(response.data);
+      } else {
+        setFetchError("Dữ liệu không đúng định dạng.");
+      }
     } catch (error) {
-      message.error('Lỗi khi tải danh sách nhà hàng');
+      console.error("Fetch error:", error);
+      setFetchError(error.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
-    Modal.confirm({
-      title: 'Xác nhận xoá nhà hàng?',
-      onOk: async () => {
-        try {
-          await axios.delete(`http://localhost:5000/api/restaurants/${id}`);
-          message.success('Đã xoá thành công');
-          fetchRestaurants();
-        } catch (error) {
-          message.error('Xoá thất bại');
-        }
-      }
+  useEffect(() => {
+    fetchRestaurantList();
+  }, []);
+
+  useEffect(() => {
+    if (fetchError) {
+      notification.error({
+        message: 'Lỗi khi tải dữ liệu',
+        description: fetchError,
+        placement: 'topRight',
+      });
+    }
+  }, [fetchError]);
+
+  const handleViewDetail = (restaurant) => {
+    navigate(`/admin/restaurant/detail/${restaurant._id}`);
+  };
+
+  const handleEditRestaurant = (restaurant) => {
+    navigate(`/admin/restaurant/edit/${restaurant._id}`);
+  };
+
+  const handleAddRestaurant = () => {
+    navigate(`/admin/restaurant/create`);
+  };
+
+  const handleDeleteRestaurant = async (restaurant) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/restaurants/${restaurant._id}`);
+      setRestaurantList((prevList) => prevList.filter((item) => item._id !== restaurant._id));
+
+      notification.success({
+        message: 'Xóa thành công',
+        description: 'Nhà hàng đã được xóa khỏi danh sách.',
+        placement: 'topRight',
+      });
+    } catch (error) {
+      console.error("Delete error:", error);
+      notification.error({
+        message: 'Xóa thất bại',
+        description: 'Không thể xóa nhà hàng.',
+        placement: 'topRight',
+      });
+      setFetchError(error.message);
+    }
+  };
+
+  const showDeleteConfirmation = (restaurant) => {
+    if (!restaurant || !restaurant._id) {
+      console.warn("Không có thông tin nhà hàng để xóa");
+      return;
+    }
+
+    confirm({
+      title: 'Bạn có chắc chắn muốn xóa nhà hàng này?',
+      content: `Tên nhà hàng: ${restaurant.name}`,
+      okText: 'Xác nhận',
+      cancelText: 'Hủy',
+      centered: true,
+      okButtonProps: {
+        style: {
+          background: 'linear-gradient(135deg, #6253e1, #04befe)',
+          color: '#fff',
+        },
+      },
+      onOk() {
+        handleDeleteRestaurant(restaurant);
+      },
+      onCancel() {
+        console.log('Đã hủy xóa nhà hàng');
+      },
     });
   };
 
-  useEffect(() => {
-    fetchRestaurants();
-  }, []);
-
-  const columns = [
+  const tableColumns = [
     {
       title: 'Ảnh',
       dataIndex: 'imageUrl',
@@ -52,7 +117,7 @@ const RestaurantAdmin = () => {
       title: 'Tên nhà hàng',
       dataIndex: 'name',
       key: 'name',
-      render: text => <strong>{text}</strong>,
+      render: (text) => <b>{text}</b>,
     },
     {
       title: 'Loại ẩm thực',
@@ -68,41 +133,54 @@ const RestaurantAdmin = () => {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
-      render: text => <Paragraph ellipsis={{ rows: 2 }}>{text}</Paragraph>,
+      render: (text) => <Paragraph ellipsis={{ rows: 2 }}>{text}</Paragraph>,
     },
     {
       title: 'Hành động',
-      key: 'actions',
-      render: (_, record) => (
-        <Space>
-          <Button icon={<EyeOutlined />} onClick={() => navigate(`/restaurants/${record._id}`)}>Xem</Button>
-          <Button icon={<EditOutlined />} onClick={() => navigate(`/restaurants/edit/${record._id}`)}>Sửa</Button>
-          <Button icon={<DeleteOutlined />} danger onClick={() => handleDelete(record._id)}>Xoá</Button>
-        </Space>
-      )
-    }
+      key: 'action',
+      render: (_, restaurant) => (
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <Button
+            type="primary"
+            onClick={() => handleViewDetail(restaurant)}
+            style={{ background: 'linear-gradient(135deg, #6253e1, #04befe)' }}
+          >
+            <b>Chi tiết</b>
+          </Button>
+          <Button type="primary" className="btn-warn" onClick={() => handleEditRestaurant(restaurant)}>
+            <b>Sửa</b>
+          </Button>
+          <Button danger onClick={() => showDeleteConfirmation(restaurant)}>
+            <b>Xóa</b>
+          </Button>
+        </div>
+      ),
+    },
   ];
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>Quản lý nhà hàng</h2>
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        style={{ marginBottom: 16 }}
-        onClick={() => navigate('/admin/restaurant/create')}
-      >
-        Tạo mới nhà hàng
-      </Button>
-      <Table
-        dataSource={restaurants}
-        columns={columns}
-        rowKey="_id"
-        loading={loading}
-        pagination={{ pageSize: 5 }}
-      />
+    <div className="product">
+      <h1>Danh sách nhà hàng</h1>
+      <Row gutter={[16, 16]} align="middle" style={{ marginBottom: 16 }}>
+        <Col>
+          <Button type="primary" onClick={handleAddRestaurant}>
+            Thêm nhà hàng
+          </Button>
+        </Col>
+      </Row>
+
+      {restaurantList.length === 0 ? (
+        <div>Không có nhà hàng để hiển thị.</div>
+      ) : (
+        <Table
+          columns={tableColumns}
+          dataSource={restaurantList.map((item) => ({ ...item, key: item._id }))}
+          loading={isLoading}
+          pagination={{ pageSize: 5 }}
+        />
+      )}
     </div>
   );
-};
+}
 
-export default RestaurantAdmin;
+export default AdminRestaurants;

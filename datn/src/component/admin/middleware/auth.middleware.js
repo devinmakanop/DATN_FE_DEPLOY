@@ -1,43 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import Cookies from 'js-cookie'; // Để lưu và truy xuất token từ cookie
+import Cookies from 'js-cookie'; // nếu bạn dùng cookie, còn không có thể bỏ
 
 const PrivateRoute = () => {
-  const API = process.env.REACT_APP_API_URL_ADMIN;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // Để xử lý khi chờ phản hồi API
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkToken = async () => {
-      const token = Cookies.get('token'); // Lấy token từ cookie
-
-      try {
-        const response = await fetch(`${API}/accounts/checkToken`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` // Gửi token trong header
-          }
-        });
-
-        const result = await response.json();
-        if (result.code == 200) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
+      const token = localStorage.getItem('token'); // hoặc Cookies.get('token') nếu bạn dùng cookie
+      if (token) {
+        setIsAuthenticated(true);
+      } else {
         setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
       }
+      setLoading(false); // đã kiểm tra xong
     };
 
     checkToken();
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Hiển thị khi đang kiểm tra token
+    return <div>Đang kiểm tra xác thực...</div>; // hoặc spinner
   }
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/admin/login" />;

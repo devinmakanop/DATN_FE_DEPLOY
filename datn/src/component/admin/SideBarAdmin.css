@@ -1,0 +1,11 @@
+/* Đảm bảo chữ menu màu trắng */
+.ant-layout-sider-dark .ant-menu-dark, 
+.ant-layout-sider-dark .ant-menu-dark .ant-menu-item, 
+.ant-layout-sider-dark .ant-menu-dark .ant-menu-item a {
+  color: #fff !important;
+}
+
+/* Đảm bảo icon trước chữ menu cũng màu trắng */
+.ant-layout-sider-dark .ant-menu-dark .ant-menu-item-icon {
+  color: #fff !important;
+}

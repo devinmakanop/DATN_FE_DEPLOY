@@ -1,15 +1,26 @@
-import React from 'react';
-import { Menu } from 'antd';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Layout, Menu, Button } from 'antd';
 import {
-  UnorderedListOutlined,
+  InsertRowAboveOutlined,
   InsertRowBelowOutlined,
-  InsertRowAboveOutlined
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import './SideBarAdmin.css';
+
+const { Sider } = Layout;
 
 export default function SidebarAdmin() {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [collapsed, setCollapsed] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/admin/login');
+  };
 
   const items = [
     {
@@ -40,12 +51,67 @@ export default function SidebarAdmin() {
   ];
 
   return (
-    <Menu
-      mode="inline"
-      defaultSelectedKeys={[location.pathname]}
-      defaultOpenKeys={['lichhen']}
-      style={{ height: '100%', borderRight: 0 }}
-      items={items}
-    />
+    <Sider
+      collapsible
+      collapsed={collapsed}
+      onCollapse={(value) => setCollapsed(value)}
+      width={220}
+      style={{
+        height: '100vh',
+        background: '#001529',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      {/* Header / Logo */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: collapsed ? 'center' : 'space-between',
+        padding: '16px',
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: '16px'
+      }}>
+        {!collapsed && <span>Admin Panel</span>}
+        <Button
+          type="text"
+          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={() => setCollapsed(!collapsed)}
+          style={{ color: '#fff' }}
+        />
+      </div>
+
+      {/* Menu */}
+      <Menu
+        mode="inline"
+        selectedKeys={[location.pathname]}
+        style={{
+          flex: 1,
+          background: '#001529',
+          color: '#fff'
+        }}
+        items={items}
+        theme="dark"
+      />
+
+      {/* Logout Button */}
+      <div style={{ padding: '16px', textAlign: 'center' }}>
+        <Button
+          danger
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+          type="primary"
+          style={{ width: '100%' }}
+        >
+          {!collapsed && 'Đăng xuất'}
+        </Button>
+      </div>
+    </Sider>
   );
 }

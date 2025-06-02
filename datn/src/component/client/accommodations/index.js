@@ -78,7 +78,7 @@ function AccommodationList() {
   return (
     <div style={{ padding: 20 }}>
       {/* Ví dụ thêm dropdown chọn ngôn ngữ */}
-      <Title level={2} style={{ textAlign: 'center', marginBottom: 30 }}>
+      <Title level={2} className='text-color' style={{ textAlign: 'center', marginBottom: 30 }}>
         {labels.title}
       </Title>
 

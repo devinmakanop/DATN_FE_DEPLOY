@@ -30,17 +30,26 @@ import RegisterClient from './component/client/register';
 import ClientResidencyGuideDetail from './component/client/residenceGuide/detail';
 import PrivateRoute from './component/admin/middleware/auth.middleware';
 import LoginAdmin from './component/admin/login';
+import AdminLocationUpdate from './component/admin/locations/update';
+import AdminRestaurantEdit from './component/admin/restaurant/edit';
+import AdminRestaurantDetail from './component/admin/restaurant/detail';
+import TravelAgencyAdminEdit from './component/admin/travelAgency/edit';
+import TravelAgencyAdminDetail from './component/admin/travelAgency/detail';
+import AdminAccommodationCreate from './component/admin/accommodations/create';
+import AdminAccommodationDetail from './component/admin/accommodations/detail';
+import AdminAccommodationEdit from './component/admin/accommodations/edit';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="admin/login" element={<LoginAdmin />} />
-        <Route path="admin" element={<Admin />}>
           <Route element={<PrivateRoute />}>
+        <Route path="admin" element={<Admin />}>
             <Route path="locations" element={<AdminLocations />} />
             <Route path="locations/create" element={<AdminLocationCreate />} />
             <Route path="locations/detail/:id" element={<AdminLocationDetail />} />
+            <Route path="locations/edit/:id" element={<AdminLocationUpdate />} />
 
             <Route path="residenceGuide" element={<ResidenceGuideAdmin />} />
             <Route path="residenceGuide/create" element={<ResidenceGuideCreate />} />
@@ -48,11 +57,18 @@ function App() {
 
             <Route path="restaurant" element={<RestaurantAdmin />} />
             <Route path="restaurant/create" element={<RestaurantCreate />} />
+            <Route path="restaurant/edit/:id" element={<AdminRestaurantEdit />} />
+            <Route path="restaurant/detail/:id" element={<AdminRestaurantDetail />} />
 
             <Route path="travelAgency" element={<TravelAgencyAdmin />} />
             <Route path="travelAgency/create" element={<AddTravelAgency />} />
+            <Route path="travelAgency/edit/:id" element={<TravelAgencyAdminEdit />} />
+            <Route path="travelAgency/detail/:id" element={<TravelAgencyAdminDetail />} />
 
             <Route path="accommodations" element={<AdminAccommodation />} />
+            <Route path="accommodations/create" element={<AdminAccommodationCreate />} />
+            <Route path="accommodations/detail/:id" element={<AdminAccommodationDetail />} />
+            <Route path="accommodations/edit/:id" element={<AdminAccommodationEdit />} />
           </Route>
         </Route>
 
